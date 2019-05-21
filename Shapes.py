@@ -21,10 +21,10 @@ class ConvexPolygon(abc.ABC):
         pass
 
 class Triangle(ConvexPolygon):
+    a = de.QuantityAndType(numbers.Real)
+    b = de.QuantityAndType(numbers.Real)
+    c = de.QuantityAndType(numbers.Real)
     def __init__(self):
-        self.a = de.QuantityAndType(numbers.Real)
-        self.b = de.QuantityAndType(numbers.Real)
-        self.c = de.QuantityAndType(numbers.Real)
         
         super().__init__()
 

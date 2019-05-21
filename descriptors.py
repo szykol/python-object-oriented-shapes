@@ -51,9 +51,10 @@ class QuantityAndType(Validated):
 
     def __init__(self, data_type=None):
         self.type = data_type
+        super().__init__()
 
     def validate(self, instance, value):
-        if value >0 and self.type is not None and isinstance(value, self.type):
+        if self.type is not None and isinstance(value, self.type) and value > 0: 
             return value
         elif self.type is not None:
             raise ValueError("wartość musi być większa od zera i być typu {}!".format(self.type))
