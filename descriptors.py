@@ -57,7 +57,7 @@ class QuantityAndType(Validated):
         if self.type is not None and isinstance(value, self.type) and value > 0: 
             return value
         elif self.type is not None:
-            raise ValueError("wartość musi być większa od zera i być typu {}!".format(self.type))
+            raise ValueError("wartość musi być większa od zera i być typu {}!".format(self.type.__name__))
 
 class NonBlank(Validated):
     """sprawdza czy ciąg tekstowy jest niepusty"""
