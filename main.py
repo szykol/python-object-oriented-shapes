@@ -1,6 +1,8 @@
 from Shapes import *
 
-pentagon = RegularHexagon()
-pentagon.side = 10
+# t = Triangle((10, 10, 10))
+# print(t.area())
 
-print(pentagon.area())
+
+t = Triangle((100,100,100))
+t.draw()

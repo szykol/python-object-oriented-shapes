@@ -3,12 +3,24 @@ import abc
 import numbers
 import math
 from colors import Color
+from tkinter import *
+
+def Point(x, y):
+    return (x, y)
+
+def Vect(len, angle):
+    return (len, angle)
+
+def apply_vect(point, vect):
+    len, angle = vect
+    return Point(point[0] + math.cos(angle) * len, point[1] + math.sin(angle) * len)
+
 
 class ConvexPolygon(abc.ABC):
     @abc.abstractclassmethod
     def __init__(self):
-        self.fill_color = Color.BLACK
-        self.outline_color = Color.WHITE
+        self.fill_color = Color.WHITE
+        self.outline_color = Color.BLACK
 
     @abc.abstractclassmethod
     def area(self):
@@ -30,17 +42,36 @@ class Triangle(ConvexPolygon):
 
     def __init__(self, sides):
         self.a, self.b, self.c = sides
+        self._calcAngles()
         super().__init__()
 
     def draw(self):
-        pass
+        master = Tk()
+
+        w = Canvas(master, width=800, height=800)
+        w.pack()
+
+        point = (100, 100)
+        angle_between = self.alpha
+        second_point = apply_vect(point, Vect(self.b, math.radians(angle_between / 2)))
+        third_point = apply_vect(second_point, Vect(self.c, math.radians(180 - angle_between / 2)))
+
+        w.create_polygon(*point, *second_point, *third_point, fill=self.fill_color, outline=self.outline_color)        
+        mainloop()
 
     def perimeter(self):
         return self.a + self.b + self.c
 
     def area(self):
-        return self.a * self.b / 2
+        s = self.perimeter() / 2
+        return math.sqrt(s * (s - self.a) * (s - self.b) * (s - self.c))
 
+    def _calcAngles(self):
+        def angle (a, b, c):
+            return math.degrees(math.acos((c**2 - b**2 - a**2)/(-2.0 * a * b)))
+
+        self.alpha = angle(self.a, self.b, self.c)
+        print(self.alpha)
 
 class ConvexQuadrilateral(ConvexPolygon):
     a = de.QuantityAndType(numbers.Real)
