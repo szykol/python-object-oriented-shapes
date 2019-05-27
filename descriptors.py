@@ -59,6 +59,19 @@ class QuantityAndType(Validated):
         elif self.type is not None:
             raise ValueError("wartość musi być większa od zera i być typu {}!".format(self.type.__name__))
 
+class Range(Validated):
+    """ sprawdza czy podane liczby są w zakresie """
+    def __init__(self, start, end):
+        self.range = (start, end)
+        super().__init__()
+
+    def validate(self, instance, value):
+        start, end = self.range
+        if start <= value <= end:
+            return value
+        else:
+            raise ValueError("wartość musi być w zakresie <{}, {}>".format(start, end))    
+
 class NonBlank(Validated):
     """sprawdza czy ciąg tekstowy jest niepusty"""
     def validate(self, instance, value):
