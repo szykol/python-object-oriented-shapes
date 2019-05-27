@@ -4,5 +4,11 @@ from Shapes import *
 # print(t.area())
 
 
-t = Triangle((100,100,100))
+t = RegularPentagon(100)
+t.draw()
+
+t = RegularOctagon(100)
+t.draw()
+
+t = RegularHexagon(100)
 t.draw()

@@ -97,12 +97,34 @@ class RegularPolygon(ConvexPolygon):
     side = de.QuantityAndType(numbers.Real)
     side_count = de.QuantityAndType(int)
 
-    def __init__(self, side_count):
+    def __init__(self, side, side_count):
         self.side_count = side_count
+        self.side = side
         super().__init__()
 
     def draw(self):
-        pass
+        angle = (self.side_count - 2) / self.side_count * 180
+        print(angle)
+        angle = math.radians(angle)
+        vertices = []
+        point = Point(300, 100)
+
+        r = self.side
+        ang = 360 / self.side_count
+        for i in range(self.side_count):
+            vertices.append(Point(
+                point[0] + r * math.cos(i * ang * math.pi / 180),
+                point[1] + r * math.sin(i * ang * math.pi / 180)
+            ))
+
+        
+        master = Tk()
+
+        w = Canvas(master, width=800, height=800)
+        w.pack()
+
+        w.create_polygon(vertices, fill=self.fill_color, outline=self.outline_color)        
+        mainloop()
 
     def perimeter(self):
         return self.side * self.side_count
@@ -112,28 +134,28 @@ class RegularPolygon(ConvexPolygon):
 
 
 class RegularHexagon(RegularPolygon):
-    def __init__(self):
-        return super().__init__(6)
+    def __init__(self, side_len):
+        super().__init__(side_len, 6)
 
 
 class RegularPentagon(RegularPolygon):
-    def __init__(self):
-        return super().__init__(5)
+    def __init__(self, side_len):
+        super().__init__(side_len, 5)
 
 
 class RegularOctagon(RegularPolygon):
-    def __init__(self):
-        return super().__init__(8)
+    def __init__(self, side_len):
+        super().__init__(side_len, 8)
 
 
 class IsoscelesTriangle(Triangle):
     def __init__(self, ramie, podst):
-        return super().__init__((ramie, ramie, podst))
+        return super().__init__((ramie, podst, ramie))
 
 
 class EquilateralTriangle(Triangle):
     def __init__(self, side):
-        return super().__init__((side) * 3)
+        return super().__init__(tuple([side] * 3))
 
 
 class Parallelogram(ConvexQuadrilateral):
