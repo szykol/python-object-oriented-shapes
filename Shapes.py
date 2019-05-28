@@ -206,8 +206,8 @@ class EquilateralTriangle(Triangle):
 
 
 class Parallelogram(ConvexQuadrilateral):
-    def __init__(self, a, b):
-        return super().__init__((a, b, a, b))
+    def __init__(self, a_diagon, b_diagon, angle):
+        return super().__init__(a_diagon, b_diagon, angle, 0.5, 0.5)
 
 
 class Kite(ConvexQuadrilateral):
