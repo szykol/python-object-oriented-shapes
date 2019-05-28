@@ -216,10 +216,10 @@ class Kite(ConvexQuadrilateral):
 
 
 class Rhombus(Parallelogram):
-    def __init__(self, a):
-        return super().__init__((a, a))
+    def __init__(self, a_diagon, b_diagon):
+        return super().__init__(a_diagon, b_diagon, 90)
 
 
-class Square(Parallelogram):
-    def __init__(self, a, b):
-        return super().__init__((a, a))
+class Square(Rhombus):
+    def __init__(self, diagon):
+        return super().__init__(diagon, diagon)
