@@ -43,7 +43,6 @@ class ConvexPolygon(abc.ABC):
         w.create_polygon(vertices, fill=self.fill_color, outline=self.outline_color)        
         mainloop()
 
-
 class Triangle(ConvexPolygon):
     a = de.QuantityAndType(numbers.Real)
     b = de.QuantityAndType(numbers.Real)
@@ -53,6 +52,14 @@ class Triangle(ConvexPolygon):
         self.a, self.b, self.c = sides
         self._calcAngles()
         super().__init__()
+
+    @classmethod
+    def fromInput(cls):
+        a = float(input('Wprowadź długość boku a: '))
+        b = float(input('Wprowadź długość boku b: '))
+        c = float(input('Wprowadź długość boku c: '))
+
+        return cls((a,b,c))
 
     def draw(self):
         point = (100, 100)
@@ -97,6 +104,17 @@ class ConvexQuadrilateral(ConvexPolygon):
         self._calc_angles()
         super().__init__()
 
+    @classmethod
+    def fromInput(cls):
+        AC = float(input('Wprowadź długość przekątnej AC: '))
+        DB = float(input('Wprowadź długość przekątnej DB: '))
+        ASB_angle = float(input('Wprowadź wielkość kąta ASB: '))
+
+        AC_cuts_BD_ratio = float(input('Podaj w jakim stosunku przekątna AC przecina przekątna BD: '))
+        BD_cuts_AC_ratio = float(input('Podaj w jakim stosunku przekątna BD przecina przekątna AC: '))
+
+        return cls(AC, DB, ASB_angle, AC_cuts_BD_ratio, BD_cuts_AC_ratio)
+
     def draw(self):
         A = Point(300, 300)
         S = apply_vect(A, Vect(self.AS, 0))
@@ -136,6 +154,8 @@ class ConvexQuadrilateral(ConvexPolygon):
         self.ASD_angle = self.BSC_angle = 180 - self.ASB_angle
         self.DSC_angle = self.ASB_angle
 
+
+
 class RegularPolygon(ConvexPolygon):
     side = de.QuantityAndType(numbers.Real)
     side_count = de.QuantityAndType(int)
@@ -161,6 +181,11 @@ class RegularPolygon(ConvexPolygon):
             ))
 
         self._draw_helper(vertices)
+
+    @classmethod
+    def fromInput(cls):
+        side_len = int(input('Podaj długość boku: '))
+        return cls(side_len)
 
     def perimeter(self):
         return self.side * self.side_count
@@ -188,27 +213,68 @@ class IsoscelesTriangle(Triangle):
     def __init__(self, ramie, podst):
         return super().__init__((ramie, podst, ramie))
 
+    @classmethod
+    def fromInput(cls):
+        ramie = float(input('Podaj długość ramion: '))
+        podstawa = float(input('Podaj długość podstawy: '))
+
+        return cls(ramie, podstawa)
+
 
 class EquilateralTriangle(Triangle):
     def __init__(self, side):
         return super().__init__(tuple([side] * 3))
+
+    @classmethod
+    def fromInput(cls):
+        ramie = float(input('Podaj długość ramion: '))
+
+        return cls(ramie)
 
 
 class Parallelogram(ConvexQuadrilateral):
     def __init__(self, a_diagon, b_diagon, angle):
         return super().__init__(a_diagon, b_diagon, angle, 0.5, 0.5)
 
+    @classmethod
+    def fromInput(cls):
+        AC = float(input('Podaj długość przekątnej AC: '))
+        BD = float(input('Podaj długość przekątnej BD: '))
+
+        angle = float(input('Podaj kąt pod którym się przecinają: '))
+
+        return cls(AC, BD, angle)
+
 
 class Kite(ConvexQuadrilateral):
     def __init__(self, a_diagon, b_diagon):
         return super().__init__(a_diagon, b_diagon, 90, 0.7, 0.5)
 
+    @classmethod
+    def fromInput(cls):
+        AC = float(input('Podaj długość przekątnej AC: '))
+        BD = float(input('Podaj długość przekątnej BD: '))
+
+        return cls(AC, BD)
 
 class Rhombus(Parallelogram):
     def __init__(self, a_diagon, b_diagon):
         return super().__init__(a_diagon, b_diagon, 90)
 
+    @classmethod
+    def fromInput(cls):
+        AC = float(input('Podaj długość przekątnej AC: '))
+        BD = float(input('Podaj długość przekątnej BD: '))
+
+        return cls(AC, BD)
 
 class Square(Rhombus):
     def __init__(self, diagon):
         return super().__init__(diagon, diagon)
+
+
+    @classmethod
+    def fromInput(cls):
+        diagon = float(input('Podaj długość przekątnej: '))
+
+        return cls(diagon)

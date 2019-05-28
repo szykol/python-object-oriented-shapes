@@ -1,4 +1,4 @@
 from Shapes import *
 
-k = Kite(100, 150)
-k.draw()
+t = Square.fromInput()
+t.draw()
