@@ -34,6 +34,15 @@ class ConvexPolygon(abc.ABC):
     def draw(self):
         pass
 
+    def _draw_helper(self, vertices):
+        master = Tk()
+
+        w = Canvas(master, width=800, height=800)
+        w.pack()
+
+        w.create_polygon(vertices, fill=self.fill_color, outline=self.outline_color)        
+        mainloop()
+
 
 class Triangle(ConvexPolygon):
     a = de.QuantityAndType(numbers.Real)
@@ -46,18 +55,12 @@ class Triangle(ConvexPolygon):
         super().__init__()
 
     def draw(self):
-        master = Tk()
-
-        w = Canvas(master, width=800, height=800)
-        w.pack()
-
         point = (100, 100)
         angle_between = self.alpha
         second_point = apply_vect(point, Vect(self.b, math.radians(angle_between / 2)))
         third_point = apply_vect(second_point, Vect(self.c, math.radians(180 - angle_between / 2)))
 
-        w.create_polygon(*point, *second_point, *third_point, fill=self.fill_color, outline=self.outline_color)        
-        mainloop()
+        self._draw_helper([point, second_point, third_point])
 
     def perimeter(self):
         return self.a + self.b + self.c
@@ -101,14 +104,7 @@ class ConvexQuadrilateral(ConvexPolygon):
         C = apply_vect(S, Vect(self.CS, 0))
         D = apply_vect(S, Vect(self.DS, math.radians(180 + self.ASD_angle)))
 
-        master = Tk()
-
-        w = Canvas(master, width=800, height=800)
-        w.pack()
-
-        w.create_polygon([A,B,C,D], fill=self.fill_color, outline=self.outline_color)        
-        mainloop()
-
+        self._draw_helper([A, B, C, D])
 
     def perimeter(self):
         AB = self.AS ** 2 + self.BS ** 2 - 2 * self.AS * self.BS * math.cos(math.radians(self.ASB_angle))
@@ -164,14 +160,7 @@ class RegularPolygon(ConvexPolygon):
                 point[1] + r * math.sin(i * ang * math.pi / 180)
             ))
 
-        
-        master = Tk()
-
-        w = Canvas(master, width=800, height=800)
-        w.pack()
-
-        w.create_polygon(vertices, fill=self.fill_color, outline=self.outline_color)        
-        mainloop()
+        self._draw_helper(vertices)
 
     def perimeter(self):
         return self.side * self.side_count
@@ -211,8 +200,8 @@ class Parallelogram(ConvexQuadrilateral):
 
 
 class Kite(ConvexQuadrilateral):
-    def __init__(self, a, b):
-        return super().__init__((a, a, b, b))
+    def __init__(self, a_diagon, b_diagon):
+        return super().__init__(a_diagon, b_diagon, 90, 0.7, 0.5)
 
 
 class Rhombus(Parallelogram):
