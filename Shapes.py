@@ -93,7 +93,29 @@ class ConvexQuadrilateral(ConvexPolygon):
         super().__init__()
 
     def draw(self):
-        pass
+        AS = self.BD_cuts_AC_ratio * self.AC_diagonal
+        CS = self.AC_diagonal - AS
+
+        BS = self.AC_cuts_BD_ratio * self.BD_diagonal
+        DS = self.BD_diagonal - BS
+
+        ASD_angle = BSC_angle = 180 - self.ASB_angle
+        DSC_angle = self.ASB_angle
+
+        A = Point(300, 300)
+        S = apply_vect(A, Vect(AS, 0))
+        B = apply_vect(S, Vect(BS, math.radians(180 - self.ASB_angle)))
+        C = apply_vect(S, Vect(CS, 0))
+        D = apply_vect(S, Vect(DS, math.radians(180 + ASD_angle)))
+
+        master = Tk()
+
+        w = Canvas(master, width=800, height=800)
+        w.pack()
+
+        w.create_polygon([A,B,C,D], fill=self.fill_color, outline=self.outline_color)        
+        mainloop()
+
 
     def perimeter(self):
         AS = self.BD_cuts_AC_ratio * self.AC_diagonal
