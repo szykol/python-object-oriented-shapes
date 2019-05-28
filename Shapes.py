@@ -90,23 +90,16 @@ class ConvexQuadrilateral(ConvexPolygon):
         self.ASB_angle = angle
         self.AC_cuts_BD_ratio = AC_ratio
         self.BD_cuts_AC_ratio = BD_ratio
+
+        self._calc_angles()
         super().__init__()
 
     def draw(self):
-        AS = self.BD_cuts_AC_ratio * self.AC_diagonal
-        CS = self.AC_diagonal - AS
-
-        BS = self.AC_cuts_BD_ratio * self.BD_diagonal
-        DS = self.BD_diagonal - BS
-
-        ASD_angle = BSC_angle = 180 - self.ASB_angle
-        DSC_angle = self.ASB_angle
-
         A = Point(300, 300)
-        S = apply_vect(A, Vect(AS, 0))
-        B = apply_vect(S, Vect(BS, math.radians(180 - self.ASB_angle)))
-        C = apply_vect(S, Vect(CS, 0))
-        D = apply_vect(S, Vect(DS, math.radians(180 + ASD_angle)))
+        S = apply_vect(A, Vect(self.AS, 0))
+        B = apply_vect(S, Vect(self.BS, math.radians(180 - self.ASB_angle)))
+        C = apply_vect(S, Vect(self.CS, 0))
+        D = apply_vect(S, Vect(self.DS, math.radians(180 + self.ASD_angle)))
 
         master = Tk()
 
@@ -118,42 +111,34 @@ class ConvexQuadrilateral(ConvexPolygon):
 
 
     def perimeter(self):
-        AS = self.BD_cuts_AC_ratio * self.AC_diagonal
-        CS = self.AC_diagonal - AS
-
-        BS = self.AC_cuts_BD_ratio * self.BD_diagonal
-        DS = self.BD_diagonal - BS
-
-        ASD_angle = BSC_angle = 180 - self.ASB_angle
-        DSC_angle = self.ASB_angle
-
-        AB = AS ** 2 + BS ** 2 - 2 * AS * BS * math.cos(math.radians(self.ASB_angle))
+        AB = self.AS ** 2 + self.BS ** 2 - 2 * self.AS * self.BS * math.cos(math.radians(self.ASB_angle))
         AB = math.sqrt(AB)
-        BC = BS ** 2 + CS ** 2 - 2 * BS * CS * math.cos(math.radians(BSC_angle))
+        BC = self.BS ** 2 + self.CS ** 2 - 2 * self.BS * self.CS * math.cos(math.radians(self.BSC_angle))
         BC = math.sqrt(BC)
-        CD = CS ** 2 + DS ** 2 - 2 * CS * DS * math.cos(math.radians(DSC_angle))
+        CD = self.CS ** 2 + self.DS ** 2 - 2 * self.CS * self.DS * math.cos(math.radians(self.DSC_angle))
         CD = math.sqrt(CD)
-        DA = DS ** 2 + AS ** 2 - 2 * DS * AS * math.cos(math.radians(ASD_angle))
+        DA = self.DS ** 2 + self.AS ** 2 - 2 * self.DS * self.AS * math.cos(math.radians(self.ASD_angle))
         DA = math.sqrt(DA)
 
         return AB + BC + CD + DA
  
     def area(self):
-        AS = self.BD_cuts_AC_ratio * self.AC_diagonal
-        CS = self.AC_diagonal - AS
-
-        BS = self.AC_cuts_BD_ratio * self.BD_diagonal
-        DS = self.BD_diagonal - BS
-
-        ASD_angle = BSC_angle = 180 - self.ASB_angle
-        DSC_angle = self.ASB_angle
-
-        ASB_area = AS * BS / 2 * math.sin(math.radians(self.ASB_angle))
-        BSC_area = CS * BS / 2 * math.sin(math.radians(BSC_angle))
-        ASD_area = AS * DS / 2 * math.sin(math.radians(ASD_angle))
-        DSC_area = CS * DS / 2 * math.sin(math.radians(DSC_angle))
+        ASB_area = self.AS * self.BS / 2 * math.sin(math.radians(self.ASB_angle))
+        BSC_area = self.CS * self.BS / 2 * math.sin(math.radians(self.BSC_angle))
+        ASD_area = self.AS * self.DS / 2 * math.sin(math.radians(self.ASD_angle))
+        DSC_area = self.CS * self.DS / 2 * math.sin(math.radians(self.DSC_angle))
 
         return ASB_area + BSC_area + ASD_area + DSC_area
+    
+    def _calc_angles(self):
+        self.AS = self.BD_cuts_AC_ratio * self.AC_diagonal
+        self.CS = self.AC_diagonal - self.AS
+
+        self.BS = self.AC_cuts_BD_ratio * self.BD_diagonal
+        self.DS = self.BD_diagonal - self.BS
+
+        self.ASD_angle = self.BSC_angle = 180 - self.ASB_angle
+        self.DSC_angle = self.ASB_angle
 
 class RegularPolygon(ConvexPolygon):
     side = de.QuantityAndType(numbers.Real)
