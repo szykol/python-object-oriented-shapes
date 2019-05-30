@@ -245,6 +245,14 @@ class Parallelogram(ConvexQuadrilateral):
 
         return cls(AC, BD, angle)
 
+    def perimeter(self):
+        AB = self.AS ** 2 + self.BS ** 2 - 2 * self.AS * self.BS * math.cos(math.radians(self.ASB_angle))
+        AB = CD = math.sqrt(AB)        
+        BC = self.BS ** 2 + self.CS ** 2 - 2 * self.BS * self.CS * math.cos(math.radians(self.BSC_angle))
+        BC = DA = math.sqrt(BC)
+
+        return AB + BC + CD + DA
+
     def _calc_angles(self):
         self.AS = self.CS = self.AC_diagonal / 2
         self.BS = self.DS = self.BD_diagonal / 2
@@ -290,6 +298,10 @@ class Rhombus(Parallelogram):
 
         self.ASD_angle = self.BSC_angle = self.DSC_angle = self.ASB_angle = 90
 
+    def perimeter(self):
+        AB = self.AS ** 2 + self.BS ** 2 - 2 * self.AS * self.BS * math.cos(math.radians(self.ASB_angle))
+        return AB * 4
+        
 class Square(Rhombus):
     def __init__(self, diagon):
         return super().__init__(diagon, diagon)
