@@ -81,7 +81,6 @@ class Triangle(ConvexPolygon):
             return math.degrees(math.acos((c**2 - b**2 - a**2)/(-2.0 * a * b)))
 
         self.alpha = angle(self.a, self.b, self.c)
-        print(self.alpha)
 
 class ConvexQuadrilateral(ConvexPolygon):
     AC_diagonal = de.QuantityAndType(numbers.Real)
@@ -153,7 +152,6 @@ class ConvexQuadrilateral(ConvexPolygon):
 
         self.ASD_angle = self.BSC_angle = 180 - self.ASB_angle
         self.DSC_angle = self.ASB_angle
-
 
 
 class RegularPolygon(ConvexPolygon):
@@ -231,6 +229,8 @@ class EquilateralTriangle(Triangle):
 
         return cls(ramie)
 
+    def _calcAngles(self):
+        self.alpha = 60
 
 class Parallelogram(ConvexQuadrilateral):
     def __init__(self, a_diagon, b_diagon, angle):
@@ -245,6 +245,13 @@ class Parallelogram(ConvexQuadrilateral):
 
         return cls(AC, BD, angle)
 
+    def _calc_angles(self):
+        self.AS = self.CS = self.AC_diagonal / 2
+        self.BS = self.DS = self.BD_diagonal / 2
+
+        self.ASD_angle = self.BSC_angle = 180 - self.ASB_angle
+        self.DSC_angle = self.ASB_angle
+
 
 class Kite(ConvexQuadrilateral):
     def __init__(self, a_diagon, b_diagon):
@@ -257,6 +264,15 @@ class Kite(ConvexQuadrilateral):
 
         return cls(AC, BD)
 
+    def _calc_angles(self):
+        self.AS = self.BD_cuts_AC_ratio * self.AC_diagonal
+        self.CS = self.AC_diagonal - self.AS
+
+        self.BS = self.AC_cuts_BD_ratio * self.BD_diagonal
+        self.DS = self.BD_diagonal - self.BS
+
+        self.ASD_angle = self.BSC_angle = self.DSC_angle = self.ASB_angle = 90
+
 class Rhombus(Parallelogram):
     def __init__(self, a_diagon, b_diagon):
         return super().__init__(a_diagon, b_diagon, 90)
@@ -267,6 +283,12 @@ class Rhombus(Parallelogram):
         BD = float(input('Podaj długość przekątnej BD: '))
 
         return cls(AC, BD)
+    
+    def _calc_angles(self):
+        self.AS = self.CS = self.AC_diagonal / 2
+        self.BS = self.DS = self.BD_diagonal / 2
+
+        self.ASD_angle = self.BSC_angle = self.DSC_angle = self.ASB_angle = 90
 
 class Square(Rhombus):
     def __init__(self, diagon):
